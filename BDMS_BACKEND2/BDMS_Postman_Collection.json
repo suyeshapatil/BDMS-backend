@@ -1,0 +1,235 @@
+{
+  "info": {
+    "name": "Blood Donation Management System (BDMS) API",
+    "description": "Postman collection for the BDMS Spring Boot backend (PGCP-AC-027).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "accessToken", "value": "" },
+    { "key": "refreshToken", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register Donor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const body = pm.response.json();",
+                  "  pm.collectionVariables.set('accessToken', body.data.accessToken);",
+                  "  pm.collectionVariables.set('refreshToken', body.data.refreshToken);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Rohan Patil\",\n  \"email\": \"rohan@example.com\",\n  \"password\": \"Passw0rd!\",\n  \"role\": \"DONOR\",\n  \"age\": 24,\n  \"gender\": \"Male\",\n  \"bloodGroup\": \"O+\",\n  \"mobile\": \"9876543210\",\n  \"city\": \"Pune\",\n  \"address\": \"MG Road, Pune\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api","auth","register"] }
+          }
+        },
+        {
+          "name": "Register Hospital",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"City Care Hospital Admin\",\n  \"email\": \"citycare@example.com\",\n  \"password\": \"Passw0rd!\",\n  \"role\": \"HOSPITAL\",\n  \"hospitalName\": \"City Care Hospital\",\n  \"registrationNo\": \"REG-2026-001\",\n  \"contactNo\": \"9123456780\",\n  \"city\": \"Pune\",\n  \"address\": \"FC Road, Pune\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api","auth","register"] }
+          }
+        },
+        {
+          "name": "Register Admin",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"System Admin\",\n  \"email\": \"admin@bdms.local\",\n  \"password\": \"Admin@123\",\n  \"role\": \"ADMIN\",\n  \"designation\": \"Super Admin\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api","auth","register"] }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const body = pm.response.json();",
+                  "  pm.collectionVariables.set('accessToken', body.data.accessToken);",
+                  "  pm.collectionVariables.set('refreshToken', body.data.refreshToken);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"rohan@example.com\",\n  \"password\": \"Passw0rd!\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/auth/login", "host": ["{{baseUrl}}"], "path": ["api","auth","login"] }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/auth/refresh-token", "host": ["{{baseUrl}}"], "path": ["api","auth","refresh-token"] }
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"rohan@example.com\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/auth/forgot-password", "host": ["{{baseUrl}}"], "path": ["api","auth","forgot-password"] }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"token\": \"<token from email>\",\n  \"newPassword\": \"NewPassw0rd!\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/auth/reset-password", "host": ["{{baseUrl}}"], "path": ["api","auth","reset-password"] }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"currentPassword\": \"Passw0rd!\",\n  \"newPassword\": \"NewPassw0rd!\"\n}" },
+            "url": { "raw": "{{baseUrl}}/api/auth/change-password", "host": ["{{baseUrl}}"], "path": ["api","auth","change-password"] }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/logout", "host": ["{{baseUrl}}"], "path": ["api","auth","logout"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Donors",
+      "item": [
+        { "name": "Get All / Search Donors", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/donors?bloodGroup=O+&city=Pune", "host": ["{{baseUrl}}"], "path": ["api","donors"], "query": [{ "key": "bloodGroup", "value": "O+" }, { "key": "city", "value": "Pune" }] } } },
+        { "name": "Get Donor By Id", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/donors/1", "host": ["{{baseUrl}}"], "path": ["api","donors","1"] } } },
+        { "name": "Get My Donor Profile", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/donors/me", "host": ["{{baseUrl}}"], "path": ["api","donors","me"] } } },
+        { "name": "Update Donor Profile", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{accessToken}}" }], "body": { "mode": "raw", "raw": "{\n  \"city\": \"Mumbai\",\n  \"mobile\": \"9999999999\"\n}" }, "url": { "raw": "{{baseUrl}}/api/donors/1", "host": ["{{baseUrl}}"], "path": ["api","donors","1"] } } },
+        { "name": "Update Availability", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{accessToken}}" }], "body": { "mode": "raw", "raw": "{\n  \"availability\": false\n}" }, "url": { "raw": "{{baseUrl}}/api/donors/1/availability", "host": ["{{baseUrl}}"], "path": ["api","donors","1","availability"] } } },
+        { "name": "Delete Donor", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/donors/1", "host": ["{{baseUrl}}"], "path": ["api","donors","1"] } } }
+      ]
+    },
+    {
+      "name": "Hospitals",
+      "item": [
+        { "name": "Get All Hospitals", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/hospitals", "host": ["{{baseUrl}}"], "path": ["api","hospitals"] } } },
+        { "name": "Get Verified Hospitals (public)", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/hospitals/verified", "host": ["{{baseUrl}}"], "path": ["api","hospitals","verified"] } } },
+        { "name": "Get My Hospital Profile", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/hospitals/me", "host": ["{{baseUrl}}"], "path": ["api","hospitals","me"] } } },
+        { "name": "Update Hospital", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{accessToken}}" }], "body": { "mode": "raw", "raw": "{\n  \"contactNo\": \"9988776655\"\n}" }, "url": { "raw": "{{baseUrl}}/api/hospitals/1", "host": ["{{baseUrl}}"], "path": ["api","hospitals","1"] } } },
+        { "name": "Delete Hospital", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/hospitals/1", "host": ["{{baseUrl}}"], "path": ["api","hospitals","1"] } } }
+      ]
+    },
+    {
+      "name": "Blood Requests",
+      "item": [
+        { "name": "Create Blood Request (Hospital)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{accessToken}}" }], "body": { "mode": "raw", "raw": "{\n  \"patientName\": \"Anita Sharma\",\n  \"bloodGroup\": \"O+\",\n  \"unitsRequired\": 2,\n  \"city\": \"Pune\",\n  \"urgencyLevel\": \"CRITICAL\"\n}" }, "url": { "raw": "{{baseUrl}}/api/blood-requests", "host": ["{{baseUrl}}"], "path": ["api","blood-requests"] } } },
+        { "name": "Get All Requests", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/blood-requests", "host": ["{{baseUrl}}"], "path": ["api","blood-requests"] } } },
+        { "name": "Get Request By Id", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/blood-requests/1", "host": ["{{baseUrl}}"], "path": ["api","blood-requests","1"] } } },
+        { "name": "Get Requests By Hospital", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/blood-requests/hospital/1", "host": ["{{baseUrl}}"], "path": ["api","blood-requests","hospital","1"] } } },
+        { "name": "Get Requests Matching Me (Donor)", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/blood-requests/matching-me", "host": ["{{baseUrl}}"], "path": ["api","blood-requests","matching-me"] } } },
+        { "name": "Update Request Status", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{accessToken}}" }], "body": { "mode": "raw", "raw": "{\n  \"requestStatus\": \"COMPLETED\"\n}" }, "url": { "raw": "{{baseUrl}}/api/blood-requests/1/status", "host": ["{{baseUrl}}"], "path": ["api","blood-requests","1","status"] } } },
+        { "name": "Delete Request", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/blood-requests/1", "host": ["{{baseUrl}}"], "path": ["api","blood-requests","1"] } } }
+      ]
+    },
+    {
+      "name": "Donor Responses",
+      "item": [
+        { "name": "Accept Request (Donor)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{accessToken}}" }], "body": { "mode": "raw", "raw": "{\n  \"requestId\": 1\n}" }, "url": { "raw": "{{baseUrl}}/api/donor-responses/accept", "host": ["{{baseUrl}}"], "path": ["api","donor-responses","accept"] } } },
+        { "name": "Reject Request (Donor)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{accessToken}}" }], "body": { "mode": "raw", "raw": "{\n  \"requestId\": 1\n}" }, "url": { "raw": "{{baseUrl}}/api/donor-responses/reject", "host": ["{{baseUrl}}"], "path": ["api","donor-responses","reject"] } } },
+        { "name": "Update Response Status", "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{accessToken}}" }], "body": { "mode": "raw", "raw": "{\n  \"responseStatus\": \"ACCEPTED\"\n}" }, "url": { "raw": "{{baseUrl}}/api/donor-responses/1/status", "host": ["{{baseUrl}}"], "path": ["api","donor-responses","1","status"] } } },
+        { "name": "Get Responses By Donor", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/donor-responses/donor/1", "host": ["{{baseUrl}}"], "path": ["api","donor-responses","donor","1"] } } },
+        { "name": "Get Responses By Request", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/donor-responses/request/1", "host": ["{{baseUrl}}"], "path": ["api","donor-responses","request","1"] } } }
+      ]
+    },
+    {
+      "name": "Donation History",
+      "item": [
+        { "name": "Record Donation", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{accessToken}}" }], "body": { "mode": "raw", "raw": "{\n  \"donorId\": 1,\n  \"hospitalId\": 1,\n  \"donationDate\": \"2026-07-28\",\n  \"unitsDonated\": 1,\n  \"remarks\": \"Routine donation\"\n}" }, "url": { "raw": "{{baseUrl}}/api/donation-history", "host": ["{{baseUrl}}"], "path": ["api","donation-history"] } } },
+        { "name": "Get All History", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/donation-history", "host": ["{{baseUrl}}"], "path": ["api","donation-history"] } } },
+        { "name": "Get History By Donor", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/donation-history/donor/1", "host": ["{{baseUrl}}"], "path": ["api","donation-history","donor","1"] } } },
+        { "name": "Get History By Hospital", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/donation-history/hospital/1", "host": ["{{baseUrl}}"], "path": ["api","donation-history","hospital","1"] } } }
+      ]
+    },
+    {
+      "name": "Hospital Approvals (Admin)",
+      "item": [
+        { "name": "Approve/Reject Hospital", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{accessToken}}" }], "body": { "mode": "raw", "raw": "{\n  \"hospitalId\": 1,\n  \"approvalStatus\": \"APPROVED\"\n}" }, "url": { "raw": "{{baseUrl}}/api/hospital-approvals", "host": ["{{baseUrl}}"], "path": ["api","hospital-approvals"] } } },
+        { "name": "Get All Approvals", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/hospital-approvals", "host": ["{{baseUrl}}"], "path": ["api","hospital-approvals"] } } },
+        { "name": "Get Approvals By Hospital", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/hospital-approvals/hospital/1", "host": ["{{baseUrl}}"], "path": ["api","hospital-approvals","hospital","1"] } } }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        { "name": "Create Notification", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{accessToken}}" }], "body": { "mode": "raw", "raw": "{\n  \"userId\": 1,\n  \"title\": \"System Notice\",\n  \"message\": \"Scheduled maintenance tonight\",\n  \"notificationType\": \"SYSTEM\"\n}" }, "url": { "raw": "{{baseUrl}}/api/notifications", "host": ["{{baseUrl}}"], "path": ["api","notifications"] } } },
+        { "name": "Get My Notifications", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/notifications/me", "host": ["{{baseUrl}}"], "path": ["api","notifications","me"] } } },
+        { "name": "Get My Unread Notifications", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/notifications/me/unread", "host": ["{{baseUrl}}"], "path": ["api","notifications","me","unread"] } } },
+        { "name": "Mark As Read", "request": { "method": "PATCH", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/notifications/1/read", "host": ["{{baseUrl}}"], "path": ["api","notifications","1","read"] } } },
+        { "name": "Delete Notification", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/notifications/1", "host": ["{{baseUrl}}"], "path": ["api","notifications","1"] } } }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        { "name": "Generate Report (Admin)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{accessToken}}" }], "body": { "mode": "raw", "raw": "{\n  \"reportName\": \"Monthly Donation Summary - July 2026\"\n}" }, "url": { "raw": "{{baseUrl}}/api/reports", "host": ["{{baseUrl}}"], "path": ["api","reports"] } } },
+        { "name": "Get All Reports", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/reports", "host": ["{{baseUrl}}"], "path": ["api","reports"] } } }
+      ]
+    },
+    {
+      "name": "Dashboard (Admin)",
+      "item": [
+        { "name": "Get Dashboard Stats", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/dashboard/stats", "host": ["{{baseUrl}}"], "path": ["api","dashboard","stats"] } } }
+      ]
+    },
+    {
+      "name": "Admin - User Management",
+      "item": [
+        { "name": "Get All Users", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/admin/users", "host": ["{{baseUrl}}"], "path": ["api","admin","users"] } } },
+        { "name": "Get User By Id", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/admin/users/1", "host": ["{{baseUrl}}"], "path": ["api","admin","users","1"] } } },
+        { "name": "Deactivate User", "request": { "method": "PATCH", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/admin/users/1/deactivate", "host": ["{{baseUrl}}"], "path": ["api","admin","users","1","deactivate"] } } },
+        { "name": "Activate User", "request": { "method": "PATCH", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/admin/users/1/activate", "host": ["{{baseUrl}}"], "path": ["api","admin","users","1","activate"] } } },
+        { "name": "Delete User", "request": { "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }], "url": { "raw": "{{baseUrl}}/api/admin/users/1", "host": ["{{baseUrl}}"], "path": ["api","admin","users","1"] } } }
+      ]
+    }
+  ]
+}
