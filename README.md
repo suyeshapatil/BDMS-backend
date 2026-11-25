@@ -1,0 +1,1 @@
+1. If we are login and then we click on the home page it is going out to main page, and just showing login user but the things which are in that role pages like dashboard also must be there should show there and  it should added below to home, about ke niche hona chahiye. acording to who is login .
