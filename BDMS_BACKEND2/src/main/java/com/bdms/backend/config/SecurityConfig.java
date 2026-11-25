@@ -72,21 +72,66 @@ public class SecurityConfig {
                         .authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler))
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // .authorizeHttpRequests(auth -> auth
+                //         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                //         .requestMatchers(HttpMethod.GET, "/api/hospitals/verified").permitAll()
+                //         .requestMatchers("/admin/**").hasRole("ADMIN")
+                //         .requestMatchers("/dashboard/**").hasRole("ADMIN")
+                //         .requestMatchers("/reports/**").hasRole("ADMIN")
+                //         .requestMatchers("/hospital-approvals/**").hasRole("ADMIN")
+                //         .requestMatchers(HttpMethod.POST, "/donation-history/**").hasAnyRole("ADMIN", "HOSPITAL")
+                //         .requestMatchers("/donors/**").hasAnyRole("ADMIN", "DONOR", "HOSPITAL")
+                //         .requestMatchers("/hospitals/**").hasAnyRole("ADMIN", "HOSPITAL")
+                //         .requestMatchers("/blood-requests/**").hasAnyRole("ADMIN", "HOSPITAL", "DONOR")
+                //         .requestMatchers("/donor-responses/**").hasAnyRole("ADMIN", "DONOR", "HOSPITAL")
+                //         .requestMatchers("/donation-history/**").hasAnyRole("ADMIN", "DONOR", "HOSPITAL")
+                //         .requestMatchers("/notifications/**").authenticated()
+                //         .anyRequest().authenticated())
+
                 .authorizeHttpRequests(auth -> auth
+
+                        // Public endpoints: No JWT required
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+
+                        // Public hospital listing
                         .requestMatchers(HttpMethod.GET, "/api/hospitals/verified").permitAll()
+
+                        // Admin-only endpoints
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/dashboard/**").hasRole("ADMIN")
                         .requestMatchers("/reports/**").hasRole("ADMIN")
                         .requestMatchers("/hospital-approvals/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/donation-history/**").hasAnyRole("ADMIN", "HOSPITAL")
-                        .requestMatchers("/donors/**").hasAnyRole("ADMIN", "DONOR", "HOSPITAL")
-                        .requestMatchers("/hospitals/**").hasAnyRole("ADMIN", "HOSPITAL")
-                        .requestMatchers("/blood-requests/**").hasAnyRole("ADMIN", "HOSPITAL", "DONOR")
-                        .requestMatchers("/donor-responses/**").hasAnyRole("ADMIN", "DONOR", "HOSPITAL")
-                        .requestMatchers("/donation-history/**").hasAnyRole("ADMIN", "DONOR", "HOSPITAL")
+
+                        // Donation history
+                        .requestMatchers(HttpMethod.POST, "/donation-history/**")
+                            .hasAnyRole("ADMIN", "HOSPITAL")
+
+                        // Donor endpoints
+                        .requestMatchers("/donors/**")
+                            .hasAnyRole("ADMIN", "DONOR", "HOSPITAL")
+
+                        // Hospital endpoints
+                        .requestMatchers("/hospitals/**")
+                            .hasAnyRole("ADMIN", "HOSPITAL")
+
+                        // Blood request endpoints
+                        .requestMatchers("/blood-requests/**")
+                            .hasAnyRole("ADMIN", "HOSPITAL", "DONOR")
+
+                        // Donor response endpoints
+                        .requestMatchers("/donor-responses/**")
+                            .hasAnyRole("ADMIN", "DONOR", "HOSPITAL")
+
+                        .requestMatchers("/donation-history/**")
+                            .hasAnyRole("ADMIN", "DONOR", "HOSPITAL")
+
+                        // Notification endpoints
                         .requestMatchers("/notifications/**").authenticated()
-                        .anyRequest().authenticated())
+
+                        // All remaining endpoints require authentication
+                        .anyRequest().authenticated()
+                )
+
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
