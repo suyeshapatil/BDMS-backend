@@ -90,6 +90,12 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
 
+                        // Explicitly allow donor registration and login
+                        .requestMatchers(
+                            HttpMethod.POST,
+                            "/api/auth/register",
+                            "/api/auth/login"
+                        ).permitAll()
                         // Public endpoints: No JWT required
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
 
