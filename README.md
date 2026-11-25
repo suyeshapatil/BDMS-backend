@@ -3,4 +3,5 @@
 3. Frontend design is plan not attractive boring update should be there.
 4. hospital changes should stored in the database used donation info
 5. Similar donor's donation quantity should mention
+6. In form the negetive integer should not be there, remove it keep positive numbers only.
    
