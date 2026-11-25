@@ -27,7 +27,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/registr")
+    @PostMapping("/register")
     @Operation(summary = "Register a new Donor, Hospital, or Admin account")
     public ResponseEntity<ApiResponse<AuthResponse>> register(@Valid @RequestBody RegisterRequest request) {
         AuthResponse response = authService.register(request);
