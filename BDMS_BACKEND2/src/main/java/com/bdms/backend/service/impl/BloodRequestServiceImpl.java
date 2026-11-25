@@ -23,7 +23,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.bdms.backend.dto.request.DonationHistoryCreateRequest;
+import com.bdms.backend.service.DonationHistoryService;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -37,6 +39,7 @@ public class BloodRequestServiceImpl implements BloodRequestService {
     private final DonorRepository donorRepository;
     private final NotificationRepository notificationRepository;
     private final EmailService emailService;
+    private final DonationHistoryService donationHistoryService;
 
     @Override
     @Transactional
@@ -169,17 +172,30 @@ public class BloodRequestServiceImpl implements BloodRequestService {
                 .toList();
     }
 
-    @Override
-    @Transactional
-    public BloodRequestDto updateStatus(Long requestId,
-                                        BloodRequestStatusUpdateRequest request) {
+        @Override
+        @Transactional
+        public BloodRequestDto updateStatus(Long requestId,
+                                                BloodRequestStatusUpdateRequest request) {
 
-        BloodRequest bloodRequest = findRequest(requestId);
+                BloodRequest bloodRequest = findRequest(requestId);
+                bloodRequest.setRequestStatus(request.getRequestStatus());
+                bloodRequest = bloodRequestRepository.save(bloodRequest);
 
-        bloodRequest.setRequestStatus(request.getRequestStatus());
+                // Sirf COMPLETED hone pe aur donorId aane pe hi history banegi
+                if (request.getRequestStatus() == RequestStatus.COMPLETED
+                && request.getDonorId() != null) {
 
-        return BloodRequestMapper.toDto(
-                bloodRequestRepository.save(bloodRequest));
+                DonationHistoryCreateRequest historyRequest = new DonationHistoryCreateRequest();
+                historyRequest.setDonorId(request.getDonorId());
+                historyRequest.setHospitalId(bloodRequest.getHospital().getHospitalId());
+                historyRequest.setDonationDate(LocalDate.now());
+                historyRequest.setUnitsDonated(bloodRequest.getUnitsRequired());
+                historyRequest.setRemarks("Blood request completed - Request ID: " + requestId);
+
+                donationHistoryService.recordDonation(historyRequest);
+        }
+
+        return BloodRequestMapper.toDto(bloodRequest);
     }
 
     @Override

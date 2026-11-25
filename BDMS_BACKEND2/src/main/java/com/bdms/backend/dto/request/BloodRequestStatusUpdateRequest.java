@@ -15,4 +15,8 @@ public class BloodRequestStatusUpdateRequest {
 
     @NotNull(message = "Request status is required")
     private RequestStatus requestStatus;
+
+    // Jab hospital status COMPLETED karega, tab ye bhejega
+    // ki kis donor ne donate kiya
+    private Long donorId;
 }
