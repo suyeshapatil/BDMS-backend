@@ -4,5 +4,5 @@
 4. hospital changes should stored in the database used donation info
 5. Similar donor's donation quantity should mention
 6. In form the negetive integer should not be there, remove it keep positive numbers only.
-7. Taking loger respond to storing data in backend like registration of new user, or creating new request taking time, but for login it working fast.
+7. Taking loger respond to storing data in backend like registration of new user, or creating new request taking time, but for login it working fast. ALso why accepting the request its working fast.
 8. In hospital donor who is donating mobile and email should be must shown , it not there only name is showing.
