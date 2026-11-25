@@ -1,5 +1,6 @@
 1. If we are login and then we click on the home page it is going out to main page, and just showing login user but the things which are in that role pages like dashboard also must be there should show there and  it should added below to home, about ke niche hona chahiye. acording to who is login .
-2. Frontend design is plan not attractive boring update should be there.
-3. hospital changes should stored in the database used donation info
-4. Similar donor's donation quantity should mention
-5.  
+2. Two different menu are there one is main and another is who is login his menu role based. it must change
+3. Frontend design is plan not attractive boring update should be there.
+4. hospital changes should stored in the database used donation info
+5. Similar donor's donation quantity should mention
+   
